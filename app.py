@@ -8,7 +8,7 @@ st.title("Keratitis Vision Simulator")
 
 line_position = st.slider("Adjust Filter Position", min_value=0, max_value=100, value=50, step=1)
 
-filter_options = ["Healthy Eye", "Early Stage", "Middle Stage", "Late Stage"]
+filter_options = ["Healthy Eye", "Early Stage (<1 Week)", "Middle Stage (2 Weeks)", "Late Stage (>3 Weeks)"]
 filter = st.selectbox("Select Severity", filter_options, index=0)
 
 st.logo("https://www.iapb.org/wp-content/uploads/2020/09/KeraLink-International.png", link="https://www.keralink.org/")
@@ -55,7 +55,7 @@ class VideoProcessor(VideoProcessorBase):
             right_half = self.apply_filter_to_area(right_half, filter)
 
         img = np.concatenate((left_half, right_half), axis=1)
-        cv2.line(img, (split_point, 0), (split_point, height), (255, 255, 255), 1)
+        cv2.line(img, (split_point, 0), (split_point, height), (255, 255, 255), 3)
 
         video_frame = av.VideoFrame.from_ndarray(img, format="bgr24")
         
@@ -72,7 +72,7 @@ webrtc_streamer(
     video_frame_callback=VideoProcessor().transform,
     rtc_configuration=rtc_config,
     media_stream_constraints={
-        "video": {"width": {"ideal": 320}, "height": {"ideal": 240}, "frameRate": {"ideal": 30}},
+        "video": {"width": {"ideal": 640}, "height": {"ideal": 480}, "frameRate": {"ideal": 30}},
         "audio": False,
     }
 )
