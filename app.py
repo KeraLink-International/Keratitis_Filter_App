@@ -30,8 +30,8 @@ class VideoProcessor(VideoProcessorBase):
         noise_pattern = self.generate_fixed_noise_pattern(height, width)
 
         params = {
-            "Early Stage": {"opacity": 0.3, "blur_radius": 31, "outer_blur_radius": 21},
-            "Middle Stage": {"opacity": 0.25, "blur_radius": 51, "outer_blur_radius": 31},
+            "Early Stage": {"opacity": 0.3, "blur_radius": 21, "outer_blur_radius": 11},
+            "Middle Stage": {"opacity": 0.25, "blur_radius": 51, "outer_blur_radius": 41},
             "Late Stage": {"opacity": 0.2, "blur_radius": 81, "outer_blur_radius": 71}
         }
 
