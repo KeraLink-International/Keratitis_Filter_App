@@ -6,10 +6,36 @@ import av
 
 st.title("Keratitis Vision Simulator")
 
-line_position = st.slider("Adjust Filter Position", min_value=0, max_value=100, value=50, step=1)
+# Custom CSS to hide the original select device button
+hide_device_button_css = """
+<style>
+    button[title="Select device"] {
+        display: none;
+    }
+</style>
+"""
+
+st.markdown(hide_device_button_css, unsafe_allow_html=True)
+
+# Custom JavaScript to add a "Select Camera" button
+select_camera_button_js = """
+<script>
+    const selectDeviceButton = document.querySelector('button[title="Select device"]');
+    if (selectDeviceButton) {
+        const customButton = document.createElement('button');
+        customButton.innerHTML = 'Select Camera';
+        customButton.onclick = () => selectDeviceButton.click();
+        selectDeviceButton.parentNode.insertBefore(customButton, selectDeviceButton.nextSibling);
+    }
+</script>
+"""
+
+st.markdown(select_camera_button_js, unsafe_allow_html=True)
 
 filter_options = ["Healthy Eye", "Early Stage (<1 Week)", "Middle Stage (2 Weeks)", "Late Stage (>3 Weeks)"]
 filter = st.selectbox("Select Severity", filter_options, index=0)
+
+line_position = st.slider("Adjust Filter Position", min_value=0, max_value=100, value=50, step=1)
 
 st.logo("https://www.iapb.org/wp-content/uploads/2020/09/KeraLink-International.png", link="https://www.keralink.org/")
 
@@ -30,9 +56,9 @@ class VideoProcessor(VideoProcessorBase):
         noise_pattern = self.generate_fixed_noise_pattern(height, width)
 
         params = {
-            "Early Stage (<1 Week)": {"opacity": 0.3, "blur_radius": 21, "outer_blur_radius": 11},
-            "Middle Stage (2 Weeks)": {"opacity": 0.25, "blur_radius": 51, "outer_blur_radius": 41},
-            "Late Stage (>3 Weeks)": {"opacity": 0.2, "blur_radius": 81, "outer_blur_radius": 71}
+            "Early Stage (<1 Week)": {"opacity": 0.4, "blur_radius": 31, "outer_blur_radius": 21},
+            "Middle Stage (2 Weeks)": {"opacity": 0.2, "blur_radius": 51, "outer_blur_radius": 41},
+            "Late Stage (>3 Weeks)": {"opacity": 0.1, "blur_radius": 91, "outer_blur_radius": 81}
         }
 
         p = params.get(filter_type)
