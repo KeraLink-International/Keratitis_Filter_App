@@ -6,6 +6,8 @@ import av
 
 st.title("Keratitis Vision Simulator")
 
+st.write("Click 'Select Device' to change camera")
+
 filter_options = ["Healthy Eye", "Early Stage", "Middle Stage", "Late Stage"]
 filter = st.selectbox("Select Severity", filter_options, index=0)
 
