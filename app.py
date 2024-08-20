@@ -31,7 +31,7 @@ class VideoProcessor(VideoProcessorBase):
 
         params = {
             "Early Stage": {"opacity": 0.4, "blur_radius": 31, "outer_blur_radius": 21},
-            "Middle Stage": {"opacity": 0.2, "blur_radius": 51, "outer_blur_radius": 41},
+            "Middle Stage": {"opacity": 0.25, "blur_radius": 51, "outer_blur_radius": 41},
             "Late Stage": {"opacity": 0.1, "blur_radius": 91, "outer_blur_radius": 81}
         }
 
@@ -64,7 +64,11 @@ class VideoProcessor(VideoProcessorBase):
         return video_frame
 
 rtc_config = RTCConfiguration({
-    "iceServers": [{"urls": "stun:stun.l.google.com:19302"}]
+    "iceServers": [
+        {"urls": "stun:stun.l.google.com:19302"},
+        {"urls": "stun:stun1.l.google.com:19302"},
+        {"urls": "stun:stun2.l.google.com:19302"},
+    ]
 })
 
 webrtc_streamer(
