@@ -6,33 +6,7 @@ import av
 
 st.title("Keratitis Vision Simulator")
 
-# Custom CSS to hide the original select device button
-hide_device_button_css = """
-<style>
-    button[title="Select device"] {
-        display: none;
-    }
-</style>
-"""
-
-st.markdown(hide_device_button_css, unsafe_allow_html=True)
-
-# Custom JavaScript to add a "Select Camera" button
-select_camera_button_js = """
-<script>
-    const selectDeviceButton = document.querySelector('button[title="Select device"]');
-    if (selectDeviceButton) {
-        const customButton = document.createElement('button');
-        customButton.innerHTML = 'Select Camera';
-        customButton.onclick = () => selectDeviceButton.click();
-        selectDeviceButton.parentNode.insertBefore(customButton, selectDeviceButton.nextSibling);
-    }
-</script>
-"""
-
-st.markdown(select_camera_button_js, unsafe_allow_html=True)
-
-filter_options = ["Healthy Eye", "Early Stage (<1 Week)", "Middle Stage (2 Weeks)", "Late Stage (>3 Weeks)"]
+filter_options = ["Healthy Eye", "Early Stage", "Middle Stage", "Late Stage"]
 filter = st.selectbox("Select Severity", filter_options, index=0)
 
 line_position = st.slider("Adjust Filter Position", min_value=0, max_value=100, value=50, step=1)
@@ -56,9 +30,9 @@ class VideoProcessor(VideoProcessorBase):
         noise_pattern = self.generate_fixed_noise_pattern(height, width)
 
         params = {
-            "Early Stage (<1 Week)": {"opacity": 0.4, "blur_radius": 31, "outer_blur_radius": 21},
-            "Middle Stage (2 Weeks)": {"opacity": 0.2, "blur_radius": 51, "outer_blur_radius": 41},
-            "Late Stage (>3 Weeks)": {"opacity": 0.1, "blur_radius": 91, "outer_blur_radius": 81}
+            "Early Stage": {"opacity": 0.4, "blur_radius": 31, "outer_blur_radius": 21},
+            "Middle Stage": {"opacity": 0.2, "blur_radius": 51, "outer_blur_radius": 41},
+            "Late Stage": {"opacity": 0.1, "blur_radius": 91, "outer_blur_radius": 81}
         }
 
         p = params.get(filter_type)
@@ -81,7 +55,7 @@ class VideoProcessor(VideoProcessorBase):
             right_half = self.apply_filter_to_area(right_half, filter)
 
         img = np.concatenate((left_half, right_half), axis=1)
-        cv2.line(img, (split_point, 0), (split_point, height), (255, 255, 255), 3)
+        cv2.line(img, (split_point, 0), (split_point, height), (255, 255, 255), 1)
 
         video_frame = av.VideoFrame.from_ndarray(img, format="bgr24")
         
@@ -98,7 +72,7 @@ webrtc_streamer(
     video_frame_callback=VideoProcessor().transform,
     rtc_configuration=rtc_config,
     media_stream_constraints={
-        "video": {"width": {"ideal": 640}, "height": {"ideal": 480}, "frameRate": {"ideal": 30}},
+        "video": {"width": {"ideal": 320}, "height": {"ideal": 240}, "frameRate": {"ideal": 15}},
         "audio": False,
     }
 )
